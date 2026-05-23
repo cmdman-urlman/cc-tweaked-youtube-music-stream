@@ -3,26 +3,48 @@ import subprocess
 import shutil
 import sys
 
-app = Flask(__name__)
 
-PYTHON = sys.executable
-FFMPEG = shutil.which("ffmpeg")
+def pip_install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package])
 
-if not FFMPEG:
-    print("VIRHE: ffmpeg ei löydy PATH:ista!")
-    sys.exit(1)
 
-# Tarkistetaan ja asennetaan yt-dlp tarvittaessa
+# Tarkistetaan ja asennetaan Flask
+try:
+    import flask
+    print(f"Flask on asennettu (versio {flask.__version__}), päivitetään...")
+    pip_install("flask")
+except ImportError:
+    print("Flask ei löydy, asennetaan...")
+    pip_install("flask")
+
+from flask import Flask, Response, request
+
+# Tarkistetaan ja asennetaan/päivitetään yt-dlp
 try:
     import yt_dlp
-    print("yt-dlp on jo asennettu")
+    print(f"yt-dlp on asennettu (versio {yt_dlp.version.__version__}), päivitetään...")
+    pip_install("yt-dlp")
 except ImportError:
     print("yt-dlp ei löydy, asennetaan...")
-    subprocess.check_call([PYTHON, "-m", "pip", "install", "yt-dlp"])
-    print("yt-dlp asennettu!")
+    pip_install("yt-dlp")
+
+print("Kaikki riippuvuudet kunnossa!")
+
+# Tarkistetaan ffmpeg
+FFMPEG = shutil.which("ffmpeg")
+if not FFMPEG:
+    print("VIRHE: ffmpeg ei löydy PATH:ista!")
+    print("Lataa ffmpeg: https://ffmpeg.org/download.html")
+    print("Lisää ffmpeg/bin PATH-muuttujaan ja käynnistä uudelleen.")
+    sys.exit(1)
+
+PYTHON = sys.executable
 
 print(f"Python: {PYTHON}")
 print(f"ffmpeg: {FFMPEG}")
+
+app = Flask(__name__)
+
 
 @app.route("/stream")
 def stream():
@@ -48,6 +70,7 @@ def stream():
             [FFMPEG,
              "-i", "pipe:0",
              "-f", "dfpwm",
+             "-acodec", "dfpwm",
              "-ac", "1",
              "-ar", "48000",
              "pipe:1"],
@@ -81,6 +104,7 @@ def stream():
                 pass
 
     return Response(generate(), mimetype="application/octet-stream")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, threaded=True)
