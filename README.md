@@ -32,7 +32,7 @@ Toista YouTube-videoiden ääni suoraan CC: Tweaked -tietokoneella DFPWM1a-koode
 Avaa CC: Tweaked -tietokone Minecraftissa ja aja:
 
 ```
-pastebin get Qv902mAH play
+pastebin get Qv902mAH play.lua
 ```
 
 ---
@@ -67,13 +67,13 @@ ffmpeg: C:\ffmpeg\bin\ffmpeg.exe
 CC: Tweaked -tietokoneella:
 
 ```
-play <youtube-url>
+play.lua <youtube-url>
 ```
 
 Esimerkki:
 
 ```
-play https://www.youtube.com/watch?v=dQw4w9WgXcQ
+play.lua https://www.youtube.com/watch?v=dQw4w9WgXcQ
 ```
 
 ---
@@ -82,7 +82,7 @@ play https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 ```
 server.py   - Flask-palvelin (asentaa riippuvuudet automaattisesti)
-play        - CC: Tweaked Lua-skripti (pastebin: Qv902mAH)
+play.lua        - CC: Tweaked Lua-skripti (pastebin: Qv902mAH)
 ```
 
 ---
