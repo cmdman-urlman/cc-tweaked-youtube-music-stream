@@ -21,8 +21,7 @@ Toista YouTube-videoiden ääni suoraan CC: Tweaked -tietokoneella DFPWM1a-koode
 1. Lataa: https://ffmpeg.org/download.html → Windows builds
 2. Pura esim. `C:\ffmpeg\`
 3. Lisää `C:\ffmpeg\bin` Windowsin PATH-muuttujaan:
-   - Hae hakupalkista muokkaa järjestelmän ympäristömuttujia valitse path, valitse muokkaaa, valitse uusi ja kirjoita ffmpeg:n bin kansion polku, valitse ok ja valitse ok.
-   - Jos sinulla ei ole admin oikeuksia tai haluat vaan itsellesi pathiin ffmpeg:n tee sama mutta hae hakupalkista muokkaa tilin ympäristömuuttujia.
+   - Ohjauspaneeli → Järjestelmä → Lisäasetukset → Ympäristömuuttujat → Path → Muokkaa → Uusi
 4. Käynnistä komentokehote uudelleen ja testaa:
    ```
    ffmpeg -version
@@ -107,6 +106,25 @@ play        - CC: Tweaked Lua-skripti (pastebin: Qv902mAH)
 
 **HTTP-pyyntö epäonnistui CC:ssä**
 → Varmista että `server.py` on käynnissä. Tarkista IP-osoite tulosteesta ja että olet samassa verkossa.
+→ CC: Tweaked estää oletuksena yhteydet paikallisiin IP-osoitteisiin. Korjaa se muokkaamalla `.minecraft/config/computercraft-server.toml` tiedostoa. Etsi tämä kohta:
+```toml
+[[http.rules]]
+    #The magic "$private" host matches all private address ranges, such as localhost and 192.168.0.0/16.
+    #This rule prevents computers accessing internal services, and is strongly recommended.
+    host = "$private"
+    #deny all requests to private IP addresses.
+    action = "deny"
+```
+Muuta `action = "deny"` → `action = "allow"`:
+```toml
+[[http.rules]]
+    #The magic "$private" host matches all private address ranges, such as localhost and 192.168.0.0/16.
+    #This rule prevents computers accessing internal services, and is strongly recommended.
+    host = "$private"
+    #Allow all requests to private IP addresses.
+    action = "allow"
+```
+Käynnistä Minecraft uudelleen muutoksen jälkeen.
 
 **Ei ääntä / kaiutinta ei löydy**
 → Varmista että CC: Tweaked -tietokoneeseen on liitetty `speaker`-periferia.
