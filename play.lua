@@ -2,12 +2,12 @@ local dfpwm = require("cc.audio.dfpwm")
 local url = ...
 
 if not url then
-    error("Kaytto: play <youtube_url>")
+    print("Kaytto: play <youtube_url>")
 end
 
 local speaker = peripheral.find("speaker")
 if not speaker then
-    error("Kaiutinta ei loytynyt")
+    print("Kaiutinta ei loytynyt")
 end
 
 print("Yhdistetaan...")
@@ -19,7 +19,7 @@ local res = http.get(
 )
 
 if not res then
-    error("HTTP-pyynto epaonnistui")
+    print("HTTP-pyynto epaonnistui")
 end
 
 local decoder = dfpwm.make_decoder()
